@@ -36,7 +36,7 @@ struct DialogParams {
 	int nSec;
 	LPCWSTR pTitle;
 	LPCWSTR pMessage;
-
+	UINT uType;
 	DialogParams() {
 		ZeroMemory(this, sizeof(this));
 	}
@@ -64,6 +64,13 @@ BOOL CALLBACK DlgProc(
 
 			sTimerID = SetTimer(hDlg, 1, 1000, NULL);
 			CenterWindow(hDlg,NULL);
+			if(spParams->uType & MB_SYSTEMMODAL)
+			{
+				SetWindowPos(hDlg,
+					HWND_TOPMOST,
+					0,0,0,0,
+					SWP_NOMOVE|SWP_NOSIZE);
+			}
 			return TRUE;
 		}
 		break;
@@ -117,12 +124,14 @@ BOOL CALLBACK DlgProc(
 // This is an example of an exported function.
 TIMEDMESSAGEBOX_API int fnTimedMessageBox(int sec,
 										  LPCWSTR pTitle,
-										  LPCWSTR pMessage)
+										  LPCWSTR pMessage,
+										  UINT uType)
 {
 	DialogParams params;
 	params.nSec = sec;
 	params.pTitle = pTitle;
 	params.pMessage = pMessage;
+	params.uType = uType;
 	return DialogBoxParamW(g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		NULL,

@@ -20,7 +20,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	if(!func)
 		return 1;
 
-	func(10, L"title", L"message");
+	func(10, L"title", L"message", MB_SYSTEMMODAL);
 	return 0;
 }
 
