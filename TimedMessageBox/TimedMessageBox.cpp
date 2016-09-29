@@ -63,6 +63,7 @@ BOOL CALLBACK DlgProc(
 			SetDlgItemTextW(hDlg, IDC_EDIT_MAIN, spParams->pMessage);
 
 			sTimerID = SetTimer(hDlg, 1, 1000, NULL);
+			CenterWindow(hDlg,NULL);
 			return TRUE;
 		}
 		break;
