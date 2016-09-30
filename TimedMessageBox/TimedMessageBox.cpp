@@ -122,7 +122,8 @@ BOOL CALLBACK DlgProc(
 
 
 // This is an example of an exported function.
-TIMEDMESSAGEBOX_API int fnTimedMessageBox(int sec,
+TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
+										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR pMessage,
 										  UINT uType)
@@ -134,7 +135,7 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox(int sec,
 	params.uType = uType;
 	return DialogBoxParamW(g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
-		NULL,
+		hWnd,
 		DlgProc,
 		(LPARAM)&params);
 }

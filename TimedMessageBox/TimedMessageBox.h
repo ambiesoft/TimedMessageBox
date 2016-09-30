@@ -13,11 +13,13 @@
 
 extern "C" {
 
-typedef int (*FNTimedMessageBox)(int sec,
-										  LPCWSTR pTitle,
-										  LPCWSTR Message,
-										  UINT uType); 
-TIMEDMESSAGEBOX_API int fnTimedMessageBox(int sec,
+typedef int (*FNTimedMessageBox)(HWND hWnd,
+								int sec,
+								LPCWSTR pTitle,
+								LPCWSTR Message,
+								UINT uType); 
+TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
+										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR Message,
 										  UINT uType);
