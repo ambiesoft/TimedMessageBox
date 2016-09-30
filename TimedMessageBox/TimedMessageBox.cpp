@@ -38,7 +38,7 @@ struct DialogParams {
 	LPCWSTR pMessage;
 	UINT uType;
 	DialogParams() {
-		ZeroMemory(this, sizeof(this));
+		ZeroMemory(this, sizeof(*this));
 	}
 };
 
