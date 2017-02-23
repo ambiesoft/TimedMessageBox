@@ -37,6 +37,7 @@ struct DialogParams {
 	LPCWSTR pTitle;
 	LPCWSTR pMessage;
 	UINT uType;
+	TIMEDMESSAGEBOX_PARAMS* pTimedParams;
 	DialogParams() {
 		ZeroMemory(this, sizeof(*this));
 	}
@@ -63,7 +64,41 @@ BOOL CALLBACK DlgProc(
 			SetDlgItemTextW(hDlg, IDC_EDIT_MAIN, spParams->pMessage);
 
 			sTimerID = SetTimer(hDlg, 1, 1000, NULL);
-			CenterWindow(hDlg,NULL);
+
+			if(spParams->pTimedParams)
+			{
+				switch(spParams->pTimedParams->position)
+				{
+	
+				case TIMEDMESSAGEBOX_POSITION_TOPLEFT:
+					MoveWindowCommon(hDlg, MOVEWINDOW_TOPLEFT);
+					break;
+
+				case TIMEDMESSAGEBOX_POSITION_TOPRIGHT:
+					MoveWindowCommon(hDlg, MOVEWINDOW_TOPRIGHT);
+					break;
+
+				case TIMEDMESSAGEBOX_POSITION_BOTTOMLEFT:
+					MoveWindowCommon(hDlg, MOVEWINDOW_BOTTOMLEFT);
+					break;
+
+				case TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT:
+					MoveWindowCommon(hDlg, MOVEWINDOW_BOTTOMRIGHT);
+					break;
+
+				case TIMEDMESSAGEBOX_POSITION_CENTERSCREEN:
+					CenterWindow(hDlg,NULL);
+					break;
+
+				case TIMEDMESSAGEBOX_POSITION_CENTERPARENT:
+					CenterWindow(hDlg, spParams->pTimedParams->hWndCenterParent);
+					break;
+				}
+			}
+			else
+			{
+				CenterWindow(hDlg,NULL);
+			}
 			if(spParams->uType & MB_SYSTEMMODAL)
 			{
 				SetWindowPos(hDlg,
@@ -128,11 +163,22 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
 										  LPCWSTR pMessage,
 										  UINT uType)
 {
+	return fnTimedMessageBox2(hWnd,sec,pTitle,pMessage,uType,NULL);
+}
+
+TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
+										  int sec,
+										  LPCWSTR pTitle,
+										  LPCWSTR pMessage,
+										  UINT uType,
+										  TIMEDMESSAGEBOX_PARAMS* pParams)
+{
 	DialogParams params;
 	params.nSec = sec;
 	params.pTitle = pTitle;
 	params.pMessage = pMessage;
 	params.uType = uType;
+	params.pTimedParams=pParams;
 	return DialogBoxParamW(g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		hWnd,

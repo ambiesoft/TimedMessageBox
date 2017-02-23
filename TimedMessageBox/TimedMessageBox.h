@@ -13,6 +13,22 @@
 
 extern "C" {
 
+enum TIMEDMESSAGEBOX_POSITION {
+	TIMEDMESSAGEBOX_POSITION_DEFAULT,
+	TIMEDMESSAGEBOX_POSITION_TOPLEFT,
+	TIMEDMESSAGEBOX_POSITION_TOPRIGHT,
+	TIMEDMESSAGEBOX_POSITION_BOTTOMLEFT,
+	TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT,
+	TIMEDMESSAGEBOX_POSITION_CENTERSCREEN,
+	TIMEDMESSAGEBOX_POSITION_CENTERPARENT,
+};
+struct TIMEDMESSAGEBOX_PARAMS
+{
+	int size;
+	HWND hWndCenterParent;
+	TIMEDMESSAGEBOX_POSITION position;
+};
+
 typedef int (*FNTimedMessageBox)(HWND hWnd,
 								int sec,
 								LPCWSTR pTitle,
@@ -23,5 +39,18 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
 										  LPCWSTR pTitle,
 										  LPCWSTR Message,
 										  UINT uType);
+
+typedef int (*FNTimedMessageBox2)(HWND hWnd,
+								int sec,
+								LPCWSTR pTitle,
+								LPCWSTR Message,
+								UINT uType,
+								TIMEDMESSAGEBOX_PARAMS* pParams); 
+TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
+										  int sec,
+										  LPCWSTR pTitle,
+										  LPCWSTR Message,
+										  UINT uType,
+										  TIMEDMESSAGEBOX_PARAMS* pParams);
 
 } // extern "C"
