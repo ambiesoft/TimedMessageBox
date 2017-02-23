@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "../TimedMessageBox/TimedMessageBox.h"
+// #include "../../MyUtility/CreateSimpleWindow.h"
 
 int APIENTRY WinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -21,8 +22,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 		return 1;
 
 	func(NULL, 10, L"title", L"message", MB_SYSTEMMODAL);
-
-
 
 
 	FNTimedMessageBox2 func2=NULL;
