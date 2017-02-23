@@ -34,7 +34,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	tp.hWndCenterParent = NULL;
 	tp.position = TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT;
 
-	func2(NULL, 10, L"title", L"message", MB_SYSTEMMODAL,&tp);
+	func2(NULL, 10, L"title", L"message", 0,&tp);
 
 
 	return 0;

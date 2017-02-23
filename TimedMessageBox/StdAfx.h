@@ -19,6 +19,9 @@
 // TODO: reference additional headers your program requires here
 #include "../../MyUtility/CenterWindow.h"
 
+enum {
+	WM_APP_AFTERINIT = (WM_APP+1),
+};
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

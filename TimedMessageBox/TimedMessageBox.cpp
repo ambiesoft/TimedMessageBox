@@ -37,6 +37,7 @@ struct DialogParams {
 	LPCWSTR pTitle;
 	LPCWSTR pMessage;
 	UINT uType;
+	int nDialogResult;
 	TIMEDMESSAGEBOX_PARAMS* pTimedParams;
 	DialogParams() {
 		ZeroMemory(this, sizeof(*this));
@@ -65,6 +66,13 @@ BOOL CALLBACK DlgProc(
 
 			sTimerID = SetTimer(hDlg, 1, 1000, NULL);
 
+			PostMessage(hDlg, WM_APP_AFTERINIT, 0,0);
+			return TRUE;
+		}
+		break;
+
+		case WM_APP_AFTERINIT:
+		{
 			if(spParams->pTimedParams)
 			{
 				switch(spParams->pTimedParams->position)
@@ -106,7 +114,7 @@ BOOL CALLBACK DlgProc(
 					0,0,0,0,
 					SWP_NOMOVE|SWP_NOSIZE);
 			}
-			return TRUE;
+			ShowWindow(hDlg,SW_SHOW);
 		}
 		break;
 
@@ -121,6 +129,8 @@ BOOL CALLBACK DlgProc(
 				KillTimer(hDlg, sTimerID);
 				sTimerID=0;
 				EndDialog(hDlg, IDOK);
+				spParams->nDialogResult = IDOK;
+				// DestroyWindow(hDlg);
 				return 1;
 			}
 
@@ -135,21 +145,31 @@ BOOL CALLBACK DlgProc(
 			{
 				case IDOK:
 				{
+					spParams->nDialogResult = IDOK;
 					EndDialog(hDlg, IDOK);
-					return 1;
+					// DestroyWindow(hDlg);
+					return TRUE;
 				}
 				break;
 
 				case IDCANCEL:
 				{
+					spParams->nDialogResult = IDCANCEL;
 					EndDialog(hDlg, IDCANCEL);
-					return 1;
+					// DestroyWindow(hDlg);
+					return TRUE;
 				}
 				break;
 			}
 			break;
 		}
 		break;
+
+		//case WM_DESTROY:
+		//{
+		//	PostQuitMessage(0);
+		//}
+		//break;
 	}
 	return 0;
 }
@@ -179,6 +199,32 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 	params.pMessage = pMessage;
 	params.uType = uType;
 	params.pTimedParams=pParams;
+
+	
+	//HWND hDlg = CreateDialogParamW(
+	//	g_hModule,
+	//	MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
+	//	hWnd,
+	//	DlgProc,
+	//	(LPARAM)&params);
+
+	//BOOL bRet;
+	//MSG msg;
+	//while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) 
+	//{ 
+	//	if (bRet == -1)
+	//	{
+	//		return 0;
+	//	}
+	//	else if (!IsWindow(hDlg) || !IsDialogMessage(hDlg, &msg)) 
+	//	{ 
+	//		TranslateMessage(&msg); 
+	//		DispatchMessage(&msg); 
+	//	} 
+	//} 
+	//return params.nDialogResult==IDOK ? TRUE : FALSE;
+	
+	
 	return DialogBoxParamW(g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		hWnd,
