@@ -27,6 +27,7 @@ struct TIMEDMESSAGEBOX_PARAMS
 	int size;
 	HWND hWndCenterParent;
 	TIMEDMESSAGEBOX_POSITION position;
+	LOGFONT* pLogfont;
 };
 
 typedef int (*FNTimedMessageBox)(HWND hWnd,

@@ -5,13 +5,13 @@
 #include "../TimedMessageBox/TimedMessageBox.h"
 // #include "../../MyUtility/CreateSimpleWindow.h"
 
-int APIENTRY WinMain(HINSTANCE hInstance,
+int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
+                     LPTSTR     lpCmdLine,
+                     int       nCmdShow )
 {
  	// TODO: Place code here.
-	HMODULE hModule = LoadLibrary("TimedMessageBox.dll");
+	HMODULE hModule = LoadLibrary(L"TimedMessageBox.dll");
 	if(!hModule)
 		return 1;
 
@@ -33,6 +33,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	tp.size = sizeof(tp);
 	tp.hWndCenterParent = NULL;
 	tp.position = TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT;
+
 
 	func2(NULL, 10, L"title", L"message", 0,&tp);
 

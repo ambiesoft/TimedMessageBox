@@ -114,6 +114,11 @@ BOOL CALLBACK DlgProc(
 					0,0,0,0,
 					SWP_NOMOVE|SWP_NOSIZE);
 			}
+
+			
+			if(sizeof(TIMEDMESSAGEBOX_PARAMS) > 12)
+			{
+			}
 			ShowWindow(hDlg,SW_SHOW);
 		}
 		break;
