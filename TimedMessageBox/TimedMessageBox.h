@@ -22,36 +22,45 @@ enum TIMEDMESSAGEBOX_POSITION {
 	TIMEDMESSAGEBOX_POSITION_CENTERSCREEN,
 	TIMEDMESSAGEBOX_POSITION_CENTERPARENT,
 };
+
+
+enum TIMEDMESSAGEBOX_FLAGS
+{
+	TIMEDMESSAGEBOX_FLAGS_POSITION		=1<<0,
+	TIMEDMESSAGEBOX_FLAGS_LOGFONT		=1<<1,
+	TIMEDMESSAGEBOX_FLAGS_SHOWCMD		=1<<2,
+	TIMEDMESSAGEBOX_FLAGS_TOPMOST		=1<<3,
+};
+
 struct TIMEDMESSAGEBOX_PARAMS
 {
 	int size;
+	DWORD flags;
 	HWND hWndCenterParent;
 	TIMEDMESSAGEBOX_POSITION position;
 	LOGFONT* pLogfont;
+	int nShowCmd;
 };
 
 typedef int (*FNTimedMessageBox)(HWND hWnd,
 								int sec,
 								LPCWSTR pTitle,
-								LPCWSTR Message,
-								UINT uType); 
+								LPCWSTR Message); 
 TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
-										  LPCWSTR Message,
-										  UINT uType);
+										  LPCWSTR Message);
+										 
 
 typedef int (*FNTimedMessageBox2)(HWND hWnd,
 								int sec,
 								LPCWSTR pTitle,
 								LPCWSTR Message,
-								UINT uType,
 								TIMEDMESSAGEBOX_PARAMS* pParams); 
 TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR Message,
-										  UINT uType,
 										  TIMEDMESSAGEBOX_PARAMS* pParams);
 
 } // extern "C"

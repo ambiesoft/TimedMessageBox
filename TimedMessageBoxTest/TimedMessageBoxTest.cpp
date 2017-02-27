@@ -11,7 +11,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      int       nCmdShow )
 {
  	// TODO: Place code here.
-	HMODULE hModule = LoadLibrary(L"TimedMessageBox.dll");
+	HMODULE hModule = LoadLibrary(_T("TimedMessageBox.dll"));
 	if(!hModule)
 		return 1;
 
@@ -21,7 +21,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	if(!func)
 		return 1;
 
-	func(NULL, 10, L"title", L"message", MB_SYSTEMMODAL);
+	func(NULL, 10, L"title", L"message");
+
+
+
+
 
 
 	FNTimedMessageBox2 func2=NULL;
@@ -29,13 +33,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	if(!func2)
 		return 1;
 
-	TIMEDMESSAGEBOX_PARAMS tp;
+	TIMEDMESSAGEBOX_PARAMS tp = {0};
 	tp.size = sizeof(tp);
+	tp.flags = TIMEDMESSAGEBOX_FLAGS_POSITION|TIMEDMESSAGEBOX_FLAGS_SHOWCMD;
 	tp.hWndCenterParent = NULL;
 	tp.position = TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT;
+	tp.nShowCmd = SW_SHOWNOACTIVATE;
 
-
-	func2(NULL, 10, L"title", L"message", 0,&tp);
+	func2(NULL, 10, L"title", L"message", &tp);
 
 
 	return 0;

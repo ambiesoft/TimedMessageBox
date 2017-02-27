@@ -28,15 +28,11 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 }
 
 
-#ifndef _In_
-#define _In_
-#endif
 
 struct DialogParams {
 	int nSec;
 	LPCWSTR pTitle;
 	LPCWSTR pMessage;
-	UINT uType;
 	int nDialogResult;
 	TIMEDMESSAGEBOX_PARAMS* pTimedParams;
 	DialogParams() {
@@ -47,10 +43,10 @@ struct DialogParams {
 #define countof(T) sizeof(T)/sizeof(T[0])
 
 BOOL CALLBACK DlgProc(
-  _In_ HWND   hDlg,
-  _In_ UINT   uMsg,
-  _In_ WPARAM wParam,
-  _In_ LPARAM lParam
+  HWND   hDlg,
+  UINT   uMsg,
+  WPARAM wParam,
+  LPARAM lParam
 )
 {
 	static UINT sTimerID;
@@ -75,51 +71,65 @@ BOOL CALLBACK DlgProc(
 		{
 			if(spParams->pTimedParams)
 			{
-				switch(spParams->pTimedParams->position)
+				if((spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_POSITION)!=0)
 				{
-	
-				case TIMEDMESSAGEBOX_POSITION_TOPLEFT:
-					MoveWindowCommon(hDlg, MOVEWINDOW_TOPLEFT);
-					break;
+					switch(spParams->pTimedParams->position)
+					{
+		
+					case TIMEDMESSAGEBOX_POSITION_TOPLEFT:
+						MoveWindowCommon(hDlg, MOVEWINDOW_TOPLEFT);
+						break;
 
-				case TIMEDMESSAGEBOX_POSITION_TOPRIGHT:
-					MoveWindowCommon(hDlg, MOVEWINDOW_TOPRIGHT);
-					break;
+					case TIMEDMESSAGEBOX_POSITION_TOPRIGHT:
+						MoveWindowCommon(hDlg, MOVEWINDOW_TOPRIGHT);
+						break;
 
-				case TIMEDMESSAGEBOX_POSITION_BOTTOMLEFT:
-					MoveWindowCommon(hDlg, MOVEWINDOW_BOTTOMLEFT);
-					break;
+					case TIMEDMESSAGEBOX_POSITION_BOTTOMLEFT:
+						MoveWindowCommon(hDlg, MOVEWINDOW_BOTTOMLEFT);
+						break;
 
-				case TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT:
-					MoveWindowCommon(hDlg, MOVEWINDOW_BOTTOMRIGHT);
-					break;
+					case TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT:
+						MoveWindowCommon(hDlg, MOVEWINDOW_BOTTOMRIGHT);
+						break;
 
-				case TIMEDMESSAGEBOX_POSITION_CENTERSCREEN:
-					CenterWindow(hDlg,NULL);
-					break;
+					case TIMEDMESSAGEBOX_POSITION_CENTERSCREEN:
+						CenterWindow(hDlg,NULL);
+						break;
 
-				case TIMEDMESSAGEBOX_POSITION_CENTERPARENT:
-					CenterWindow(hDlg, spParams->pTimedParams->hWndCenterParent);
-					break;
+					case TIMEDMESSAGEBOX_POSITION_CENTERPARENT:
+						CenterWindow(hDlg, spParams->pTimedParams->hWndCenterParent);
+						break;
+					}
 				}
+				
+				int nShowCmd = SW_SHOW;
+				if(spParams->pTimedParams)
+				{
+					if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_LOGFONT)
+					{
+					}
+
+					if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_SHOWCMD)
+					{
+						nShowCmd = spParams->pTimedParams->nShowCmd;
+					}
+				}
+				ShowWindow(hDlg,nShowCmd);
+
+				if(spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_TOPMOST)
+				{
+					SetWindowPos(hDlg,
+						HWND_TOPMOST,
+						0,0,0,0,
+						SWP_NOMOVE|SWP_NOSIZE);
+				}
+
 			}
 			else
 			{
 				CenterWindow(hDlg,NULL);
+				ShowWindow(hDlg, SW_SHOW);
 			}
-			if(spParams->uType & MB_SYSTEMMODAL)
-			{
-				SetWindowPos(hDlg,
-					HWND_TOPMOST,
-					0,0,0,0,
-					SWP_NOMOVE|SWP_NOSIZE);
-			}
-
-			
-			if(sizeof(TIMEDMESSAGEBOX_PARAMS) > 12)
-			{
-			}
-			ShowWindow(hDlg,SW_SHOW);
 		}
 		break;
 
@@ -185,24 +195,22 @@ BOOL CALLBACK DlgProc(
 TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
-										  LPCWSTR pMessage,
-										  UINT uType)
+										  LPCWSTR pMessage)
+
 {
-	return fnTimedMessageBox2(hWnd,sec,pTitle,pMessage,uType,NULL);
+	return fnTimedMessageBox2(hWnd,sec,pTitle,pMessage,NULL);
 }
 
 TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR pMessage,
-										  UINT uType,
 										  TIMEDMESSAGEBOX_PARAMS* pParams)
 {
 	DialogParams params;
 	params.nSec = sec;
 	params.pTitle = pTitle;
 	params.pMessage = pMessage;
-	params.uType = uType;
 	params.pTimedParams=pParams;
 
 	
