@@ -63,12 +63,20 @@ BOOL CALLBACK DlgProc(
 			sTimerID = SetTimer(hDlg, 1, 1000, NULL);
 
 			PostMessage(hDlg, WM_APP_AFTERINIT, 0,0);
+
+			
+			if(spParams->pTimedParams && 
+				(spParams->pTimedParams->nShowCmd==SW_SHOWNA || spParams->pTimedParams->nShowCmd==SW_SHOWNOACTIVATE))
+			{
+				SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_TOPMOST | WS_EX_NOACTIVATE);
+			}
 			return TRUE;
 		}
 		break;
 
 		case WM_APP_AFTERINIT:
 		{
+			SetWindowLong(hDlg, GWL_EXSTYLE, (GetWindowLong(hDlg, GWL_EXSTYLE)&~(WS_EX_TOPMOST | WS_EX_NOACTIVATE)));
 			if(spParams->pTimedParams)
 			{
 				if((spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_POSITION)!=0)

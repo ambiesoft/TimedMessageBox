@@ -16,12 +16,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return 1;
 
 	
-	FNTimedMessageBox func=NULL;
-	func = (FNTimedMessageBox)GetProcAddress(hModule, "fnTimedMessageBox");
-	if(!func)
-		return 1;
+	//FNTimedMessageBox func=NULL;
+	//func = (FNTimedMessageBox)GetProcAddress(hModule, "fnTimedMessageBox");
+	//if(!func)
+	//	return 1;
 
-	func(NULL, 10, L"title", L"message");
+	//func(NULL, 10, L"title", L"message");
 
 
 
