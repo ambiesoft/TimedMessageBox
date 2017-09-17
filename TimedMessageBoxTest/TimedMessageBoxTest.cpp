@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "../TimedMessageBox/TimedMessageBox.h"
-// #include "../../MyUtility/CreateSimpleWindow.h"
+// #include "../../lsMisc/CreateSimpleWindow.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,

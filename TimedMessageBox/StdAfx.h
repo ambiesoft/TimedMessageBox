@@ -17,7 +17,8 @@
 #include <windows.h>
 
 // TODO: reference additional headers your program requires here
-#include "../../MyUtility/CenterWindow.h"
+#include "../../lsMisc/CenterWindow.h"
+#include "../../lsMisc/SetClipboardText.h"
 
 enum {
 	WM_APP_AFTERINIT = (WM_APP+1),

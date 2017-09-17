@@ -5,6 +5,8 @@
 #include "resource.h"
 #include "TimedMessageBox.h"
 
+using namespace Ambiesoft;
+
 HINSTANCE g_hModule;
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
@@ -76,7 +78,7 @@ BOOL CALLBACK DlgProc(
 
 		case WM_APP_AFTERINIT:
 		{
-			SetWindowLong(hDlg, GWL_EXSTYLE, (GetWindowLong(hDlg, GWL_EXSTYLE)&~(WS_EX_TOPMOST | WS_EX_NOACTIVATE)));
+			//SetWindowLong(hDlg, GWL_EXSTYLE, (GetWindowLong(hDlg, GWL_EXSTYLE)&~(WS_EX_TOPMOST | WS_EX_NOACTIVATE)));
 			if(spParams->pTimedParams)
 			{
 				if((spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_POSITION)!=0)
@@ -166,6 +168,12 @@ BOOL CALLBACK DlgProc(
 		{
 			switch(LOWORD(wParam))
 			{
+				case IDC_BUTTON_COPY:
+				{
+					SetClipboardText(hDlg, spParams->pMessage);
+				}
+				break;
+
 				case IDOK:
 				{
 					spParams->nDialogResult = IDOK;
