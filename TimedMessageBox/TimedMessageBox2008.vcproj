@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="TimedMessageBox"
 	ProjectGUID="{425843B4-40CA-4735-8A35-594A249778FE}"
+	RootNamespace="TimedMessageBox"
 	TargetFrameworkVersion="0"
 	>
 	<Platforms>
@@ -104,6 +105,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="echo &quot;$(ProjectName) -&gt; $(TargetPath)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -197,6 +199,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="echo &quot;----- $(ProjectName) -&gt; $(TargetPath)&quot;"
 			/>
 		</Configuration>
 	</Configurations>
