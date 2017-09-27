@@ -70,7 +70,8 @@ BOOL CALLBACK DlgProc(
 			if(spParams->pTimedParams && 
 				(spParams->pTimedParams->nShowCmd==SW_SHOWNA || spParams->pTimedParams->nShowCmd==SW_SHOWNOACTIVATE))
 			{
-				SetWindowLong(hDlg, GWL_EXSTYLE, WS_EX_TOPMOST | WS_EX_NOACTIVATE);
+				SetWindowLong(hDlg, GWL_EXSTYLE, 
+					GetWindowLong(hDlg, GWL_EXSTYLE) | WS_EX_TOPMOST | WS_EX_NOACTIVATE);
 			}
 			return TRUE;
 		}
@@ -112,19 +113,19 @@ BOOL CALLBACK DlgProc(
 					}
 				}
 				
-				int nShowCmd = SW_SHOW;
-				if(spParams->pTimedParams)
-				{
-					if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_LOGFONT)
-					{
-					}
+				//int nShowCmd = SW_SHOW;
+				//if(spParams->pTimedParams)
+				//{
+				//	if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_LOGFONT)
+				//	{
+				//	}
 
-					if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_SHOWCMD)
-					{
-						nShowCmd = spParams->pTimedParams->nShowCmd;
-					}
-				}
-				ShowWindow(hDlg,nShowCmd);
+				//	if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_SHOWCMD)
+				//	{
+				//		nShowCmd = spParams->pTimedParams->nShowCmd;
+				//	}
+				//}
+				//ShowWindow(hDlg,nShowCmd);
 
 				if(spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_TOPMOST)
 				{
