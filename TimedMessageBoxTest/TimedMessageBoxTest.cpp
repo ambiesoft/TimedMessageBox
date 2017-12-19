@@ -40,7 +40,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	tp.position = TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT;
 	tp.nShowCmd = SW_SHOWNOACTIVATE;
 
-	func2(NULL, 10, L"title", L"message", &tp);
+	func2(NULL, 10, L"title", L"message\r\nmessage2", &tp);
 
 
 	return 0;
