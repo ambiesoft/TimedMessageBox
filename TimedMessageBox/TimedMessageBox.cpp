@@ -36,6 +36,7 @@ struct DialogParams {
 	LPCWSTR pTitle;
 	LPCWSTR pMessage;
 	int nDialogResult;
+	bool timedout;
 	TIMEDMESSAGEBOX_PARAMS* pTimedParams;
 	DialogParams() {
 		ZeroMemory(this, sizeof(*this));
@@ -156,6 +157,7 @@ BOOL CALLBACK DlgProc(
 				sTimerID=0;
 				EndDialog(hDlg, IDOK);
 				spParams->nDialogResult = IDOK;
+				spParams->timedout = true;
 				// DestroyWindow(hDlg);
 				return 1;
 			}
@@ -178,6 +180,7 @@ BOOL CALLBACK DlgProc(
 				case IDOK:
 				{
 					spParams->nDialogResult = IDOK;
+					spParams->timedout = false;
 					EndDialog(hDlg, IDOK);
 					// DestroyWindow(hDlg);
 					return TRUE;
@@ -187,6 +190,7 @@ BOOL CALLBACK DlgProc(
 				case IDCANCEL:
 				{
 					spParams->nDialogResult = IDCANCEL;
+					spParams->timedout = false;
 					EndDialog(hDlg, IDCANCEL);
 					// DestroyWindow(hDlg);
 					return TRUE;
@@ -228,6 +232,7 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 	params.nSec = sec;
 	params.pTitle = pTitle;
 	params.pMessage = pMessage;
+	params.timedout = false;
 	params.pTimedParams=pParams;
 
 	
@@ -255,11 +260,14 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 	//return params.nDialogResult==IDOK ? TRUE : FALSE;
 	
 	
-	return DialogBoxParamW(g_hModule,
+	int dret = DialogBoxParamW(g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		hWnd,
 		DlgProc,
 		(LPARAM)&params);
+	if (params.timedout)
+		dret |= TIMEDMESSAGEBOX_FLAGS_TIMEDOUT;
+	return dret;
 }
 
 

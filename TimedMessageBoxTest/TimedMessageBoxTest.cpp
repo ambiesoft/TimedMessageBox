@@ -40,8 +40,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	tp.position = TIMEDMESSAGEBOX_POSITION_BOTTOMRIGHT;
 	tp.nShowCmd = SW_SHOWNOACTIVATE;
 
-	func2(NULL, 10, L"title", L"message\r\nmessage2", &tp);
+	int ret = func2(NULL, 10, L"title", L"message\r\nmessage2", &tp);
 
+	std::wstring message;
+	if (ret & TIMEDMESSAGEBOX_FLAGS_TIMEDOUT)
+		message += L"Timedout";
+
+	// clear timedout flag
+	ret &= ~TIMEDMESSAGEBOX_FLAGS_TIMEDOUT;
 
 	return 0;
 }
