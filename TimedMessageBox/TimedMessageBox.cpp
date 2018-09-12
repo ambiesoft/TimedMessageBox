@@ -45,14 +45,14 @@ struct DialogParams {
 
 #define countof(T) sizeof(T)/sizeof(T[0])
 
-BOOL CALLBACK DlgProc(
+INT_PTR CALLBACK DlgProc(
   HWND   hDlg,
   UINT   uMsg,
   WPARAM wParam,
   LPARAM lParam
 )
 {
-	static UINT sTimerID;
+	static UINT_PTR sTimerID;
 	static DialogParams* spParams;
 	static LPCWSTR spOK = L"OK";
 	switch(uMsg)
@@ -74,6 +74,24 @@ BOOL CALLBACK DlgProc(
 				SetWindowLong(hDlg, GWL_EXSTYLE, 
 					GetWindowLong(hDlg, GWL_EXSTYLE) | WS_EX_TOPMOST | WS_EX_NOACTIVATE);
 			}
+
+			// Font size =* 1.2
+			HFONT hFontEdit = (HFONT)SendDlgItemMessage(hDlg, IDC_EDIT_MAIN, WM_GETFONT, 0, 0);
+			if (hFontEdit)
+			{
+				LOGFONT logFont = { 0 };
+				if (0 != GetObject(hFontEdit, sizeof(logFont), &logFont))
+				{
+					logFont.lfHeight = (LONG)((logFont.lfHeight * 100 * 1.2) / 100);
+					logFont.lfWidth = (LONG)((logFont.lfWidth * 100 * 1.2) / 100);
+					HFONT hNewFont = CreateFontIndirect(&logFont);
+					if (hNewFont)
+					{
+						SendDlgItemMessage(hDlg, IDC_EDIT_MAIN, WM_SETFONT, (WPARAM)hNewFont, 0);
+					}
+				}
+			}
+
 			return TRUE;
 		}
 		break;
@@ -235,32 +253,8 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 	params.timedout = false;
 	params.pTimedParams=pParams;
 
-	
-	//HWND hDlg = CreateDialogParamW(
-	//	g_hModule,
-	//	MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
-	//	hWnd,
-	//	DlgProc,
-	//	(LPARAM)&params);
-
-	//BOOL bRet;
-	//MSG msg;
-	//while ((bRet = GetMessage(&msg, NULL, 0, 0)) != 0) 
-	//{ 
-	//	if (bRet == -1)
-	//	{
-	//		return 0;
-	//	}
-	//	else if (!IsWindow(hDlg) || !IsDialogMessage(hDlg, &msg)) 
-	//	{ 
-	//		TranslateMessage(&msg); 
-	//		DispatchMessage(&msg); 
-	//	} 
-	//} 
-	//return params.nDialogResult==IDOK ? TRUE : FALSE;
-	
-	
-	int dret = DialogBoxParamW(g_hModule,
+	int dret = (int)DialogBoxParamW(
+		g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		hWnd,
 		DlgProc,
