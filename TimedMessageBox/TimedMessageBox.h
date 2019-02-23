@@ -23,16 +23,20 @@ enum TIMEDMESSAGEBOX_POSITION {
 	TIMEDMESSAGEBOX_POSITION_CENTERPARENT,
 };
 
+enum TIMEDMESSAGEBOX_RESULT {
+	TIMEDMESSAGEBOX_RESULT_OK = 1 << 0,
+	TIMEDMESSAGEBOX_RESULT_TIMEDOUT = 1 << 31,
+};
+
 
 enum TIMEDMESSAGEBOX_FLAGS
 {
-	TIMEDMESSAGEBOX_FLAGS_POSITION		=1<<0,
-	TIMEDMESSAGEBOX_FLAGS_LOGFONT		=1<<1,
-	TIMEDMESSAGEBOX_FLAGS_SHOWCMD		=1<<2,
-	TIMEDMESSAGEBOX_FLAGS_TOPMOST		=1<<3,
-
-	TIMEDMESSAGEBOX_FLAGS_TIMEDOUT = 1 << 31,
+	TIMEDMESSAGEBOX_FLAGS_POSITION = 1 << 0,
+	TIMEDMESSAGEBOX_FLAGS_LOGFONT = 1 << 1,
+	TIMEDMESSAGEBOX_FLAGS_SHOWCMD = 1 << 2,
+	TIMEDMESSAGEBOX_FLAGS_TOPMOST = 1 << 3,
 };
+
 
 
 struct TIMEDMESSAGEBOX_PARAMS
@@ -49,18 +53,18 @@ typedef int (*FNTimedMessageBox)(HWND hWnd,
 								int sec,
 								LPCWSTR pTitle,
 								LPCWSTR Message); 
-TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
+TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR Message);
 										 
 
-typedef int (*FNTimedMessageBox2)(HWND hWnd,
+typedef DWORD(*FNTimedMessageBox2)(HWND hWnd,
 								int sec,
 								LPCWSTR pTitle,
 								LPCWSTR Message,
 								TIMEDMESSAGEBOX_PARAMS* pParams); 
-TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
+TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox2(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR Message,

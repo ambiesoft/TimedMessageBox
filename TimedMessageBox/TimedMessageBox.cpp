@@ -231,7 +231,7 @@ INT_PTR CALLBACK DlgProc(
 
 
 // This is an example of an exported function.
-TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
+TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR pMessage)
@@ -240,7 +240,7 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox(HWND hWnd,
 	return fnTimedMessageBox2(hWnd,sec,pTitle,pMessage,NULL);
 }
 
-TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
+TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox2(HWND hWnd,
 										  int sec,
 										  LPCWSTR pTitle,
 										  LPCWSTR pMessage,
@@ -253,14 +253,14 @@ TIMEDMESSAGEBOX_API int fnTimedMessageBox2(HWND hWnd,
 	params.timedout = false;
 	params.pTimedParams=pParams;
 
-	int dret = (int)DialogBoxParamW(
+	DWORD dret = DialogBoxParamW(
 		g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		hWnd,
 		DlgProc,
 		(LPARAM)&params);
 	if (params.timedout)
-		dret |= TIMEDMESSAGEBOX_FLAGS_TIMEDOUT;
+		dret |= TIMEDMESSAGEBOX_RESULT_TIMEDOUT;
 	return dret;
 }
 
