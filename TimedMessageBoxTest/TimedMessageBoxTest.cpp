@@ -49,12 +49,22 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		DWORD ret = func2(NULL, 10, L"title", message.c_str(), &tp);
 
 
-		if (ret & TIMEDMESSAGEBOX_RESULT_OK)
+		switch (ret)
+		{
+		case IDOK:
 			result += L"OK";
-		else
+			break;
+		case IDCANCEL:
 			result += L"Cancel";
-
-		if (ret & TIMEDMESSAGEBOX_RESULT_TIMEDOUT)
+			break;
+		case IDRETRY:
+			result += L"Retry";
+			break;
+		default:
+			result += L"Unknown";
+			break;
+		}
+		if (tp.nTimeout)
 			result += L" (Timedout)";
 	}
 

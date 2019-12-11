@@ -195,12 +195,19 @@ INT_PTR CALLBACK DlgProc(
 				}
 				break;
 
+				case IDC_BUTTON_KEEP:
+				{
+					KillTimer(hDlg, sTimerID);
+					sTimerID = 0;
+					SetDlgItemTextW(hDlg, IDOK, spOK);
+				}
+				break;
+
 				case IDOK:
 				{
 					spParams->nDialogResult = IDOK;
 					spParams->timedout = false;
 					EndDialog(hDlg, IDOK);
-					// DestroyWindow(hDlg);
 					return TRUE;
 				}
 				break;
@@ -210,7 +217,15 @@ INT_PTR CALLBACK DlgProc(
 					spParams->nDialogResult = IDCANCEL;
 					spParams->timedout = false;
 					EndDialog(hDlg, IDCANCEL);
-					// DestroyWindow(hDlg);
+					return TRUE;
+				}
+				break;
+
+				case IDRETRY:
+				{
+					spParams->nDialogResult = IDRETRY;
+					spParams->timedout = false;
+					EndDialog(hDlg, IDRETRY);
 					return TRUE;
 				}
 				break;
@@ -259,8 +274,8 @@ TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox2(HWND hWnd,
 		hWnd,
 		DlgProc,
 		(LPARAM)&params);
-	if (params.timedout)
-		dret |= TIMEDMESSAGEBOX_RESULT_TIMEDOUT;
+
+	pParams->nTimeout = !!params.timedout;
 	return dret;
 }
 
