@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "../TimedMessageBox/TimedMessageBox.h"
-// #include "../../lsMisc/CreateSimpleWindow.h"
+#include "../../lsMisc/HighDPI.h"
 
 using namespace std;
 
@@ -17,6 +17,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      LPTSTR     lpCmdLine,
                      int       nCmdShow )
 {
+	Ambiesoft::InitHighDPISupport();
+
 	HMODULE hModule = LoadLibrary(_T("TimedMessageBox.dll"));
 	if (!hModule)
 	{
