@@ -1,53 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{f1fdcf9e-c424-4234-8e5e-001093205fe9}</UniqueIdentifier>
-      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
+    <Filter Include="01 Header Files">
       <UniqueIdentifier>{45919185-1cff-45dc-963e-7d0985f92c56}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
+    <Filter Include="02 Source Files">
+      <UniqueIdentifier>{f1fdcf9e-c424-4234-8e5e-001093205fe9}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="03 Resource Files">
       <UniqueIdentifier>{d191fe60-e088-41af-9008-561b6b8184e4}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="04 Dist">
+      <UniqueIdentifier>{c6a3ef71-325c-4383-931e-77503941a6bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\lsMisc\CenterWindow.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>02 Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StdAfx.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>02 Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TimedMessageBox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>02 Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lsMisc\SetClipboardText.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>02 Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
-      <Filter>Source Files</Filter>
+      <Filter>02 Source Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\lsMisc\CenterWindow.h">
-      <Filter>Header Files</Filter>
+      <Filter>01 Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StdAfx.h">
-      <Filter>Header Files</Filter>
+      <Filter>01 Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TimedMessageBox.h">
-      <Filter>Header Files</Filter>
+      <Filter>01 Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
+      <Filter>01 Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\lsMisc\SetClipboardText.h">
-      <Filter>Header Files</Filter>
+      <Filter>01 Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="history.txt">
+      <Filter>04 Dist</Filter>
+    </Text>
   </ItemGroup>
 </Project>

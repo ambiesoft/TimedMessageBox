@@ -1,0 +1,4 @@
+﻿2021/02/27 v1.0.1
+ボタンを隠す億ションを追加（TIMEDMESSAGEBOX_FLAGS_HIDECOPYなど）
+
+

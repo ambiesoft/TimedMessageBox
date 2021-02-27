@@ -45,6 +45,7 @@ struct DialogParams {
 
 #define countof(T) sizeof(T)/sizeof(T[0])
 
+
 INT_PTR CALLBACK DlgProc(
   HWND   hDlg,
   UINT   uMsg,
@@ -91,6 +92,22 @@ INT_PTR CALLBACK DlgProc(
 					}
 				}
 			}
+
+			ShowWindow(GetDlgItem(hDlg, IDC_BUTTON_COPY),
+				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDECOPY))
+				? SW_HIDE : SW_SHOW);
+			ShowWindow(GetDlgItem(hDlg, IDC_BUTTON_KEEP),
+				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDEKEEP))
+				? SW_HIDE : SW_SHOW);
+			ShowWindow(GetDlgItem(hDlg, IDRETRY),
+				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDERETRY))
+				? SW_HIDE : SW_SHOW);
+			ShowWindow(GetDlgItem(hDlg, IDOK),
+				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDEOK))
+				? SW_HIDE : SW_SHOW);
+			ShowWindow(GetDlgItem(hDlg, IDCANCEL),
+				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDECANCEL))
+				? SW_HIDE : SW_SHOW);
 
 			return TRUE;
 		}
