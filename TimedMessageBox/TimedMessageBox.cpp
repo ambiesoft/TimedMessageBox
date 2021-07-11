@@ -291,8 +291,8 @@ TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox2(HWND hWnd,
 		hWnd,
 		DlgProc,
 		(LPARAM)&params);
-
-	pParams->nTimeout = !!params.timedout;
+	if(pParams)
+		pParams->nTimeout = !!params.timedout;
 	return dret;
 }
 

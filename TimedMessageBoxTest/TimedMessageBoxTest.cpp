@@ -12,12 +12,32 @@ void errorExit(wstring message)
 	MessageBox(NULL, message.c_str(), L"TimedMessageBoxTest", MB_ICONERROR);
 	exit(1);
 }
+
+BOOL debugKocchi()
+{
+	HWND hWnd = NULL;
+	const wchar_t APP_NAME[] = L"appname";
+	HMODULE hModule = LoadLibrary(_T("TimedMessageBox.dll"));
+	if (!hModule)
+		return TRUE;
+
+	FNTimedMessageBox func = NULL;
+	func = (FNTimedMessageBox)GetProcAddress(hModule, "fnTimedMessageBox");
+	if (!func)
+		return TRUE;
+
+	if (IDOK != func(hWnd, 300, APP_NAME, L"message"))
+		return FALSE;
+	return TRUE;
+}
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPTSTR     lpCmdLine,
                      int       nCmdShow )
 {
 	Ambiesoft::InitHighDPISupport();
+
+	debugKocchi();
 
 	HMODULE hModule = LoadLibrary(_T("TimedMessageBox.dll"));
 	if (!hModule)
