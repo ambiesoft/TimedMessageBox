@@ -30,28 +30,9 @@ BOOL debugKocchi()
 		return FALSE;
 	return TRUE;
 }
-int APIENTRY _tWinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPTSTR     lpCmdLine,
-                     int       nCmdShow )
+
+void testCount(FNTimedMessageBox2 func2, int count)
 {
-	Ambiesoft::InitHighDPISupport();
-
-	debugKocchi();
-
-	HMODULE hModule = LoadLibrary(_T("TimedMessageBox.dll"));
-	if (!hModule)
-	{
-		errorExit(L"Module unloadable");
-	}
-
-	FNTimedMessageBox2 func2=NULL;
-	func2 = (FNTimedMessageBox2)GetProcAddress(hModule, "fnTimedMessageBox2");
-	if (!func2)
-	{
-		errorExit(L"function not found");
-	}
-
 	wstring result;
 	{
 		TIMEDMESSAGEBOX_PARAMS tp = { 0 };
@@ -72,8 +53,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 			message += std::to_wstring(i);
 			message += L"\r\n";
 		}
-		DWORD ret = func2(NULL, 10, L"title", message.c_str(), &tp);
-
+		DWORD ret = func2(NULL, count, L"title", message.c_str(), &tp);
 
 		switch (ret)
 		{
@@ -105,6 +85,31 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 		DWORD ret = func2(NULL, 10, L"title", result.c_str(), &tp);
 	}
+}
+int APIENTRY _tWinMain(HINSTANCE hInstance,
+                     HINSTANCE hPrevInstance,
+                     LPTSTR     lpCmdLine,
+                     int       nCmdShow )
+{
+	Ambiesoft::InitHighDPISupport();
+
+	debugKocchi();
+
+	HMODULE hModule = LoadLibrary(_T("TimedMessageBox.dll"));
+	if (!hModule)
+	{
+		errorExit(L"Module unloadable");
+	}
+
+	FNTimedMessageBox2 func2=NULL;
+	func2 = (FNTimedMessageBox2)GetProcAddress(hModule, "fnTimedMessageBox2");
+	if (!func2)
+	{
+		errorExit(L"function not found");
+	}
+
+	testCount(func2, 10);
+	testCount(func2, -1);
 	return 0;
 }
 

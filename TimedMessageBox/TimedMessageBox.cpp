@@ -54,8 +54,10 @@ INT_PTR CALLBACK DlgProc(
 )
 {
 	static UINT_PTR sTimerID;
+	static const UINT_PTR MYTIMERID = 1;
 	static DialogParams* spParams;
 	static LPCWSTR spOK = L"OK";
+	
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
@@ -64,10 +66,10 @@ INT_PTR CALLBACK DlgProc(
 			SetWindowTextW(hDlg, spParams->pTitle);
 			SetDlgItemTextW(hDlg, IDC_EDIT_MAIN, spParams->pMessage);
 
-			sTimerID = SetTimer(hDlg, 1, 1000, NULL);
+			if (spParams->nSec >= 0)
+				sTimerID = SetTimer(hDlg, MYTIMERID, 1000, NULL);
 
 			PostMessage(hDlg, WM_APP_AFTERINIT, 0,0);
-
 			
 			if(spParams->pTimedParams && 
 				(spParams->pTimedParams->nShowCmd==SW_SHOWNA || spParams->pTimedParams->nShowCmd==SW_SHOWNOACTIVATE))
@@ -97,7 +99,7 @@ INT_PTR CALLBACK DlgProc(
 				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDECOPY))
 				? SW_HIDE : SW_SHOW);
 			ShowWindow(GetDlgItem(hDlg, IDC_BUTTON_KEEP),
-				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDEKEEP))
+				(spParams->nSec < 0) || (spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDEKEEP))
 				? SW_HIDE : SW_SHOW);
 			ShowWindow(GetDlgItem(hDlg, IDRETRY),
 				(spParams->pTimedParams && (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_HIDERETRY))
@@ -149,20 +151,6 @@ INT_PTR CALLBACK DlgProc(
 					}
 				}
 				
-				//int nShowCmd = SW_SHOW;
-				//if(spParams->pTimedParams)
-				//{
-				//	if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_LOGFONT)
-				//	{
-				//	}
-
-				//	if(spParams->pTimedParams->flags  & TIMEDMESSAGEBOX_FLAGS_SHOWCMD)
-				//	{
-				//		nShowCmd = spParams->pTimedParams->nShowCmd;
-				//	}
-				//}
-				//ShowWindow(hDlg,nShowCmd);
-
 				if(spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_TOPMOST)
 				{
 					SetWindowPos(hDlg,
@@ -170,7 +158,6 @@ INT_PTR CALLBACK DlgProc(
 						0,0,0,0,
 						SWP_NOMOVE|SWP_NOSIZE);
 				}
-
 			}
 			else
 			{
@@ -184,21 +171,27 @@ INT_PTR CALLBACK DlgProc(
 		{
 			if(wParam != sTimerID)
 				break;
-
-			spParams->nSec--;
-			if(spParams->nSec < 0)
-			{
-				KillTimer(hDlg, sTimerID);
-				sTimerID=0;
-				EndDialog(hDlg, IDOK);
-				spParams->nDialogResult = IDOK;
-				spParams->timedout = true;
-				// DestroyWindow(hDlg);
-				return 1;
-			}
+			assert(sTimerID==MYTIMERID);
 
 			WCHAR szT[256];
-			wsprintfW(szT, L"%s (%d)", spOK, spParams->nSec);
+			if(spParams->nSec < 0)
+			{
+				wsprintfW(szT, L"%s (INFINITE)", spOK);
+			}
+			else {
+				spParams->nSec--;
+				if (spParams->nSec < 0)
+				{
+					KillTimer(hDlg, sTimerID);
+					sTimerID = 0;
+					EndDialog(hDlg, IDOK);
+					spParams->nDialogResult = IDOK;
+					spParams->timedout = true;
+					return 1;
+				}
+				wsprintfW(szT, L"%s (%d)", spOK, spParams->nSec);
+			}
+			
 			SetDlgItemTextW(hDlg, IDOK, szT);
 		}
 		break;
