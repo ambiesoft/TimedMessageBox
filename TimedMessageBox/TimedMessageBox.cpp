@@ -278,7 +278,7 @@ TIMEDMESSAGEBOX_API DWORD fnTimedMessageBox2(HWND hWnd,
 	params.timedout = false;
 	params.pTimedParams=pParams;
 
-	DWORD dret = DialogBoxParamW(
+	DWORD dret = (DWORD)DialogBoxParamW(
 		g_hModule,
 		MAKEINTRESOURCEW(IDD_DIALOG_MAIN),
 		hWnd,
