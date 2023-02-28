@@ -45,7 +45,6 @@ struct DialogParams {
 
 #define countof(T) sizeof(T)/sizeof(T[0])
 
-
 INT_PTR CALLBACK DlgProc(
   HWND   hDlg,
   UINT   uMsg,
@@ -53,8 +52,10 @@ INT_PTR CALLBACK DlgProc(
   LPARAM lParam
 )
 {
-	static UINT_PTR sTimerID;
-	static const UINT_PTR MYTIMERID = 1;
+	static UINT_PTR countDownTimerID;
+	static const UINT_PTR COUNTDOWNTIMERID = 1;
+	static UINT_PTR keepTopMostTimerID;
+	static const UINT_PTR KEEPTOPMOSTIMERID = 2;
 	static DialogParams* spParams;
 	static LPCWSTR spOK = L"OK";
 	
@@ -67,7 +68,7 @@ INT_PTR CALLBACK DlgProc(
 			SetDlgItemTextW(hDlg, IDC_EDIT_MAIN, spParams->pMessage);
 
 			if (spParams->nSec >= 0)
-				sTimerID = SetTimer(hDlg, MYTIMERID, 1000, NULL);
+				countDownTimerID = SetTimer(hDlg, COUNTDOWNTIMERID, 1000, NULL);
 
 			PostMessage(hDlg, WM_APP_AFTERINIT, 0,0);
 			
@@ -158,6 +159,10 @@ INT_PTR CALLBACK DlgProc(
 						0,0,0,0,
 						SWP_NOMOVE|SWP_NOSIZE);
 				}
+				if (spParams->pTimedParams->flags & TIMEDMESSAGEBOX_FLAGS_KEEPTOPMOST)
+				{
+					keepTopMostTimerID = SetTimer(hDlg, KEEPTOPMOSTIMERID, 1000, NULL);
+				}
 			}
 			else
 			{
@@ -169,30 +174,39 @@ INT_PTR CALLBACK DlgProc(
 
 		case WM_TIMER:
 		{
-			if(wParam != sTimerID)
-				break;
-			assert(sTimerID==MYTIMERID);
-
-			WCHAR szT[256];
-			if(spParams->nSec < 0)
+			if (wParam == countDownTimerID)
 			{
-				wsprintfW(szT, L"%s (INFINITE)", spOK);
-			}
-			else {
-				spParams->nSec--;
+				assert(countDownTimerID == COUNTDOWNTIMERID);
+
+				WCHAR szT[256];
 				if (spParams->nSec < 0)
 				{
-					KillTimer(hDlg, sTimerID);
-					sTimerID = 0;
-					EndDialog(hDlg, IDOK);
-					spParams->nDialogResult = IDOK;
-					spParams->timedout = true;
-					return 1;
+					wsprintfW(szT, L"%s (INFINITE)", spOK);
 				}
-				wsprintfW(szT, L"%s (%d)", spOK, spParams->nSec);
+				else {
+					spParams->nSec--;
+					if (spParams->nSec < 0)
+					{
+						KillTimer(hDlg, countDownTimerID);
+						countDownTimerID = 0;
+						EndDialog(hDlg, IDOK);
+						spParams->nDialogResult = IDOK;
+						spParams->timedout = true;
+						return 1;
+					}
+					wsprintfW(szT, L"%s (%d)", spOK, spParams->nSec);
+				}
+
+				SetDlgItemTextW(hDlg, IDOK, szT);
 			}
-			
-			SetDlgItemTextW(hDlg, IDOK, szT);
+			else if (wParam == keepTopMostTimerID)
+			{
+				assert(keepTopMostTimerID == KEEPTOPMOSTIMERID);
+				SetWindowPos(hDlg,
+					HWND_TOPMOST,
+					0, 0, 0, 0,
+					SWP_NOMOVE | SWP_NOSIZE);
+			}
 		}
 		break;
 		case WM_COMMAND:
@@ -207,8 +221,8 @@ INT_PTR CALLBACK DlgProc(
 
 				case IDC_BUTTON_KEEP:
 				{
-					KillTimer(hDlg, sTimerID);
-					sTimerID = 0;
+					KillTimer(hDlg, countDownTimerID);
+					countDownTimerID = 0;
 					SetDlgItemTextW(hDlg, IDOK, spOK);
 				}
 				break;
